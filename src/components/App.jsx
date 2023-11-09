@@ -7,6 +7,8 @@ import { GlobalStyle } from './GlobalStyle';
 import { Container } from './MainPageStyle.styled';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+const stotageContacts = 'contacts';
+
 export class App extends Component {
   state = {
     contacts: [
@@ -17,6 +19,25 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = window.localStorage.getItem(stotageContacts);
+
+    if (savedContacts !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContacts),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      window.localStorage.setItem(
+        stotageContacts,
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
 
   updateFilter = newTopic => {
     this.setState(() => {
